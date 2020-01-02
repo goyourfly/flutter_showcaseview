@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:showcaseview/get_position.dart';
+import 'dart:math';
 
 class ToolTipWidget extends StatelessWidget {
   final GetPosition position;
@@ -52,15 +53,11 @@ class ToolTipWidget extends StatelessWidget {
       return 'BELOW';
     }
   }
-
   double _getTooltipWidth() {
-    double titleLength = title == null ? 0 : (title.length * 10.0);
-    double descriptionLength = (description.length * 7.0);
-    if (titleLength > descriptionLength) {
-      return titleLength + 10;
-    } else {
-      return descriptionLength + 10;
-    }
+    double titleLength = title == null ? 0 : (title.length *
+        titleTextStyle.fontSize);
+    double descriptionLength = (description.length * titleTextStyle.fontSize);
+    return max(titleLength, descriptionLength) + 10;
   }
 
   bool _isLeft() {
@@ -160,7 +157,7 @@ class ToolTipWidget extends StatelessWidget {
                         onTap: onTooltipTap,
                         child: Container(
                           width: _getTooltipWidth(),
-                          padding: EdgeInsets.all(16),
+                          padding: EdgeInsets.all(8),
                           color: tooltipColor,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,19 +165,23 @@ class ToolTipWidget extends StatelessWidget {
                               Container(
                                 child: Column(
                                   crossAxisAlignment: title != null
-                                      ? CrossAxisAlignment.start
+                                      ? CrossAxisAlignment.center
                                       : CrossAxisAlignment.center,
                                   children: <Widget>[
                                     title != null
-                                        ? Text(
-                                            title,
-                                            style: titleTextStyle ??
-                                                Theme.of(context)
-                                                    .textTheme
-                                                    .title
-                                                    .merge(TextStyle(
-                                                        color: textColor)),
-                                          )
+                                        ? Container(
+                                      margin: EdgeInsets.only(bottom: 4),
+                                      child: Text(
+                                        title,
+                                        style: titleTextStyle ??
+                                            Theme
+                                                .of(context)
+                                                .textTheme
+                                                .title
+                                                .merge(TextStyle(
+                                                color: textColor)),
+                                      ),
+                                    )
                                         : Container(),
                                     Text(
                                       description,
